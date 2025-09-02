@@ -36,7 +36,7 @@ POST /plans    GET /users    DELETE /items
 
 ### Option 2: Build from Source
 ```bash
-git clone https://github.com/yourusername/burp-tab-renamer.git
+git clone https://github.com/arthusu/burp-tab-renamer.git
 cd burp-tab-renamer
 mvn clean package
 ```
@@ -167,8 +167,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 🐛 [Report Issues](https://github.com/yourusername/burp-tab-renamer/issues)
-- 💬 [Discussions](https://github.com/yourusername/burp-tab-renamer/discussions)
+- 🐛 [Report Issues](https://github.com/arthusu/burp-tab-renamer/issues)
+- 💬 [Discussions](https://github.com/arthusu/burp-tab-renamer/discussions)
 - ⭐ Don't forget to star the repo if it helped you!
 
 ---
