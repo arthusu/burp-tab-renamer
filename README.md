@@ -15,6 +15,8 @@ A minimalist Burp Suite extension that automatically renames Repeater tabs with 
 - 🛡️ **Reliable**: No complex dependencies or hacky solutions
 
 ## 🖼️ Screenshots
+<img width="939" height="412" alt="image" src="https://github.com/user-attachments/assets/bc1c38fc-fde7-4612-b478-45348ea33cc8" />
+<img width="270" height="71" alt="image" src="https://github.com/user-attachments/assets/1b23f414-0efc-4399-899d-8449e9190877" />
 
 ### Before
 ```
