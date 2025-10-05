@@ -30,15 +30,67 @@ public class RepeaterTabRenamerSimple implements BurpExtension {
         api.logging().logToOutput("📝 Example: 'POST /plans', 'GET /users', etc.");
     }
 
+    private void handleSpecialRename(ContextMenuEvent event, String prefix) {
+    try {
+        HttpRequest request = getRequestFromEvent(event);
+        if (request != null) {
+            String name = prefix + request.method() + " " + request.path();
+            if (name.length() > 25) {
+                name = name.substring(0, 22) + "...";
+            }
+
+            api.logging().logToOutput("✅ Special rename with prefix: " + name);
+
+            if (renameCurrentTab(name)) {
+                api.logging().logToOutput("✅ Special menu rename successful: " + name);
+            } else {
+                api.logging().logToOutput("❌ Special menu rename failed");
+            }
+        } else {
+            api.logging().logToOutput("❌ Could not get request for special rename");
+        }
+    } catch (Exception e) {
+        api.logging().logToError("Error in handleSpecialRename: " + e.getMessage());
+    }
+}
+
     private class SimpleContextMenu implements ContextMenuItemsProvider {
         @Override
         public List<Component> provideMenuItems(ContextMenuEvent event) {
             List<Component> items = new ArrayList<>();
             
             if (event.isFromTool(ToolType.REPEATER)) {
+                // Menú principal de opción simple
                 JMenuItem item = new JMenuItem("Rename Tab");
                 item.addActionListener(e -> handleContextRename(event));
                 items.add(item);
+
+                // Nuevo submenú "Special Rename"
+                JMenu specialMenu = new JMenu("Special Rename");
+
+                // Sub-opciones con prefijos
+                JMenuItem apiItem = new JMenuItem("Add [XSS] prefix");
+                apiItem.addActionListener(e -> RepeaterTabRenamerSimple.this.handleSpecialRename(event, "[XSS] "));
+                specialMenu.add(apiItem);
+
+                JMenuItem testItem = new JMenuItem("Add [SQLi] prefix");
+                testItem.addActionListener(e -> RepeaterTabRenamerSimple.this.handleSpecialRename(event, "[SQLi] "));
+                specialMenu.add(testItem);
+
+                JMenuItem devItem = new JMenuItem("Add [SSRF] prefix");
+                devItem.addActionListener(e -> RepeaterTabRenamerSimple.this.handleSpecialRename(event, "[SSRF] "));
+                specialMenu.add(devItem);
+
+                JMenuItem lfiItem = new JMenuItem("Add [LFI] prefix");
+                lfiItem.addActionListener(e -> RepeaterTabRenamerSimple.this.handleSpecialRename(event, "[LFI] "));
+                specialMenu.add(lfiItem);
+
+                JMenuItem importantItem = new JMenuItem("Add [IMPORTANT] prefix");
+                importantItem.addActionListener(e -> RepeaterTabRenamerSimple.this.handleSpecialRename(event, "[IMPORTANT] "));
+                specialMenu.add(importantItem);
+
+                // Agregamos el submenú completo al menú contextual
+                items.add(specialMenu);
             }
             
             return items;
@@ -107,8 +159,23 @@ public class RepeaterTabRenamerSimple implements BurpExtension {
                                 currentTitle.contains("Request")
                             )) {
                                 api.logging().logToOutput("Renaming tab from '" + currentTitle + "' to '" + newName + "'");
-                                pane.setTitleAt(index, newName);
-                                
+                                //pane.setTitleAt(index, newName);
+                                JLabel label = new JLabel(newName);
+
+                                if (newName.startsWith("[XSS]")) {
+                                    label.setForeground(Color.BLUE);
+                                } else if (newName.startsWith("[IMPORTANT]")) {
+                                    label.setForeground(Color.ORANGE);
+                                } else if (newName.startsWith("[SQLi]")) {
+                                    label.setForeground(Color.GREEN);
+                                } else {
+                                    label.setForeground(Color.BLACK);
+                                }
+
+                                // Usa el label como componente del tab
+                                pane.setTabComponentAt(index, label);
+
+
                                 String actualName = pane.getTitleAt(index);
                                 if (newName.equals(actualName)) {
                                     return true;
